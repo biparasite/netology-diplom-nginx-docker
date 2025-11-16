@@ -6,7 +6,7 @@ pipeline {
         pollSCM('* * * * *') // Обязательно укажите 'pollSCM' 
     }
     environment {
-        IMAGE_NAME = 'biparasite/ginx_static'  // Укажите здесь!
+        IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
         TAG = "${env.GIT_COMMIT[0..7]}"
     }
     stages {
