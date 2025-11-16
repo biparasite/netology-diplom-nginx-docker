@@ -53,7 +53,7 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}|g' ${YAML_PATH}"                          
+                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${YAML_PATH}"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
