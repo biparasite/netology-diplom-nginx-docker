@@ -43,10 +43,10 @@ pipeline {
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        sh 'rm -rf nginx'
+                        sh 'rm -rf netology-diplom-k8s-config'
                         sh "git clone ${CONFIG_REPO_URL} nginx"
                         
-                        dir('nginx') {
+                        dir('netology-diplom-k8s-config') {
                             // Настройка Git для выполнения коммита
                             sh "git config user.email 'jenkins@ci.local'"
                             sh "git config user.name 'Jenkins GitOps Updater'"
@@ -54,7 +54,7 @@ pipeline {
                             
                             // 2. ОБНОВЛЕНИЕ YAML
                             sh '[ -f values.yaml ] && echo "Файл найден" || echo "Файл не найден!"' 
-                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' values.yaml"                          
+                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${YAML_PATH }"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
