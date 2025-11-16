@@ -31,6 +31,42 @@ pipeline {
                 }
             }
         }
+        stage('Update GitOps Config') {
+            steps {
+                script {
+                    // --- КОНФИГУРАЦИЯ ---
+                    def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' // Укажите URL вашего Config Repo
+                    def GIT_CREDENTIALS_ID = 'github-push-creds' // ID учетных данных для пуша
+                    def YAML_PATH = 'k8s/deployment.yaml' // Путь к вашему K8s манифесту в Config Repo
+                    def NEW_IMAGE = "${env.IMAGE_NAME}:${env.TAG}"
+
+                    // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
+                    withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        
+                        sh "git clone ${CONFIG_REPO_URL} gitops-config"
+                        
+                        dir('gitops-config') {
+                            // Настройка Git для выполнения коммита
+                            sh "git config user.email 'jenkins@ci.local'"
+                            sh "git config user.name 'Jenkins GitOps Updater'"
+                            sh "git checkout main" // или любая ветка, за которой следит Argo CD
+                            
+                            // 2. ОБНОВЛЕНИЕ YAML
+                           
+                            sh "sed -i 's|image: ${env.IMAGE_NAME}:.*|image: ${NEW_IMAGE}|g' ${YAML_PATH}"
+                            
+                            // 3. КОММИТ И PUSH
+                            sh 'git add .'
+                            sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
+                            
+                            // Push с использованием учетных данных
+                            sh "git push https://${GIT_USER}:${GIT_PASS}@github.com/biparasite/netology-diplom-k8s-config.git HEAD:main"
+                        }
+                    }
+                    echo "✅ GitOps Config обновлен до образа: ${NEW_IMAGE}"
+                }
+            }
+        }
     }
     post {
         success {
