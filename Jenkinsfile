@@ -38,6 +38,7 @@ pipeline {
                     def GIT_CREDENTIALS_ID = 'github-push-creds' // ID учетных данных для пуша
                     def YAML_PATH = 'nginx/values.yaml' // Путь к вашему K8s манифесту в Config Repo
                     def NEW_IMAGE = "${env.TAG}"
+                    def PROJECT_PATH = "${WORKSPACE}"
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
@@ -51,7 +52,7 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${YAML_PATH }"                          
+                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${PROJECT_PATH}/${YAML_PATH }"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
