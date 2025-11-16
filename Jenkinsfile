@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    triggers {
+        // Указывает Jenkins ожидать уведомления от репозитория
+        // Это более общий и предпочтительный способ для всех Git-серверов
+        pollSCM('* * * * *') // Обязательно укажите 'pollSCM' 
+    }
     environment {
         IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
         TAG = "${env.GIT_COMMIT[0..7]}"
