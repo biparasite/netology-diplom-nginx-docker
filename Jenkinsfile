@@ -28,7 +28,8 @@ pipeline {
                     }
                 }
             }
-
+        }
+    }
     post {
         success {
             echo 'Пайплайн успешно завершён!'
@@ -38,3 +39,4 @@ pipeline {
         }
     }
 }
+
