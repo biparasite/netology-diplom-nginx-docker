@@ -53,8 +53,7 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh '[ -f "${YAML_PATH}" ] && echo "Файл найден" || echo "Файл не найден!" &&
-                            [ -w "${YAML_PATH}" ] && echo "Есть права на запись" || echo "Нет прав на запись!"'
+                            sh '[ -f "${YAML_PATH}" ] && echo "Файл найден" || echo "Файл не найден!"' 
                             sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${YAML_PATH}"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
