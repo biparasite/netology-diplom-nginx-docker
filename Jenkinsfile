@@ -53,8 +53,8 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh '[ -f "${YAML_PATH}" ] && echo "Файл найден" || echo "Файл не найден!"' 
-                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' nginx/${YAML_PATH}"                          
+                            sh '[ -f values.yaml ] && echo "Файл найден" || echo "Файл не найден!"' 
+                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' values.yaml"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
