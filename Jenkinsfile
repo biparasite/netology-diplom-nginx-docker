@@ -19,7 +19,7 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
+                    docker.withRegistry('https://registry.hub.docker.com') {
                         def app = docker.build("${IMAGE_NAME}:${TAG}")
                         app.push()
                         // Дополнительно: тег latest
