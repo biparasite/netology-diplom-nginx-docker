@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'https://hub.docker.com/biparasite/'
-        TAG = "${env.GIT_COMMIT[0..7]}"  // Короткие 8 символов SHA
-        KUBE_CONFIG = '/path/to/your/kubeconfig'  // Путь к kubeconfig на сервере Jenkins
+        IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
+        TAG = "${env.GIT_COMMIT[0..7]}"
     }
 
     stages {
@@ -40,3 +39,23 @@ pipeline {
     }
 }
 
+
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'your-username/your-repo'  // Укажите здесь!
+        TAG = "${env.GIT_COMMIT[0..7]}"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials-id') {
+                        def app = docker.build("${IMAGE_NAME}:${TAG}")
+                        app.push()
+                    }
+                }
+            }
+        }
+    }
+}
