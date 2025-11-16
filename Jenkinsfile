@@ -42,7 +42,7 @@ pipeline {
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                         sh 'rm -rf netology-diplom-k8s-config'
-                        sh "git clone ${CONFIG_REPO_URL} nginx"
+                        sh "git clone ${CONFIG_REPO_URL}"
                         
                         dir('netology-diplom-k8s-config') {
                             // Настройка Git для выполнения коммита
