@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'registry.example.com/your-group/your-repo'
+        DOCKER_IMAGE = 'https://hub.docker.com/biparasite/'
         TAG = "${env.GIT_COMMIT[0..7]}"  // Короткие 8 символов SHA
         KUBE_CONFIG = '/path/to/your/kubeconfig'  // Путь к kubeconfig на сервере Jenkins
     }
