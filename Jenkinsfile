@@ -1,6 +1,4 @@
 pipeline {
-    agent any
-
     environment {
         IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
         TAG = "${env.GIT_COMMIT[0..7]}"
