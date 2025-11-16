@@ -53,7 +53,7 @@ pipeline {
                             
                             // 2. ОБНОВЛЕНИЕ YAML
                            
-                            sh "sed -i 's#image: ${env.IMAGE_NAME}:.*#image: ${NEW_IMAGE}#g'  ${YAML_PATH}"
+                            sh "sed -i 's| nginx_static:.*|nginx_static:${env.TAG}"|g' ${YAML_PATH}"
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
