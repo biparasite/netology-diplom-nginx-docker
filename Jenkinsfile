@@ -6,7 +6,7 @@ pipeline {
         pollSCM('* * * * *') // Обязательно укажите 'pollSCM' 
     }
     environment {
-        IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
+        IMAGE_NAME = 'ginx_static'  // Укажите здесь!
         TAG = "${env.GIT_COMMIT[0..7]}"
     }
     stages {
@@ -38,7 +38,7 @@ pipeline {
                     def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' // Укажите URL вашего Config Repo
                     def GIT_CREDENTIALS_ID = 'github-push-creds' // ID учетных данных для пуша
                     def YAML_PATH = 'nginx/values.yaml' // Путь к вашему K8s манифесту в Config Repo
-                    def NEW_IMAGE = "${env.IMAGE_NAME}:${env.TAG}"
+                    def NEW_IMAGE = "biparasite/${env.IMAGE_NAME}:${env.TAG}"
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
