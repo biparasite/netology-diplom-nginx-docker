@@ -43,7 +43,7 @@ pipeline {
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                         
-                        sh "git clone ${CONFIG_REPO_URL}"
+                        sh "git clone ${CONFIG_REPO_URL} nginx"
                         
                         dir('nginx') {
                             // Настройка Git для выполнения коммита
