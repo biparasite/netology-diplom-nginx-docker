@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git(
-                    url: 'https://your-repo.git',
+                    url: 'https://github.com/biparasite/netology-diplom-nginx-docker.git',
                     branch: 'main'
                 )
             }
@@ -20,7 +20,7 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.example.com', 'docker-hub-credentials-id') {
+                    docker.withRegistry('https://hub.docker.com/', 'docker-hub-credentials-id') {
                         def app = docker.build("${DOCKER_IMAGE}:${TAG}")
                         app.push()
                         // Дополнительно: тег latest
@@ -35,7 +35,7 @@ pipeline {
                 script {
                     // Подставляем тег образа в deployment.yaml
                     sh """
-                    sed -i 's|registry.example.com/your-group/your-repo:latest|${DOCKER_IMAGE}:${TAG}|g' k8s/deployment.yaml
+                    sed -i 's|https://hub.docker.com/biparasite/your-repo:latest|${DOCKER_IMAGE}:${TAG}|g' k8s/deployment.yaml
                     """
                     // Применяем манифесты
                     sh "kubectl --kubeconfig ${KUBE_CONFIG} apply -f k8s/deployment.yaml"
