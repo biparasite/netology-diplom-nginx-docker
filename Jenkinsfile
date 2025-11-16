@@ -10,6 +10,7 @@ pipeline {
             image 'docker:24-git'  // Образ с Docker CLI
             args '-v /var/run/docker.sock:/var/run/docker.sock'  // Монтируем сокет
         }
+    }
     stages {
         stage('Checkout') {
             steps {
