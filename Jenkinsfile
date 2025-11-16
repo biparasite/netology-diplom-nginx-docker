@@ -35,13 +35,13 @@ pipeline {
                 script {
                     // --- КОНФИГУРАЦИЯ ---
                     def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' // Укажите URL вашего Config Repo
-                    def GIT_CREDENTIALS_ID = 'github-push-creds' // ID учетных данных для пуша
+                    def GIT_CREDENTIALS_ID = 'github-ssh-key-for-push' // ID учетных данных для пуша
                     def YAML_PATH = 'nginx/values.yaml' // Путь к вашему K8s манифесту в Config Repo
                     def NEW_IMAGE = "${env.TAG}"
                     def PROJECT_PATH = "${WORKSPACE}"
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
-                    withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'github-ssh-key-for-push', keyFileVariable: 'GIT_SSH_KEY_FILE', usernameVariable: 'GIT_USER')]) {
                         sh 'rm -rf netology-diplom-k8s-config'
                         sh "git clone ${CONFIG_REPO_URL}"
                         
