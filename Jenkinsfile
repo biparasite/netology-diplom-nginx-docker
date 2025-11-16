@@ -37,7 +37,7 @@ pipeline {
                     // --- КОНФИГУРАЦИЯ ---
                     def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' // Укажите URL вашего Config Repo
                     def GIT_CREDENTIALS_ID = 'github-push-creds' // ID учетных данных для пуша
-                    def YAML_PATH = 'k8s/deployment.yaml' // Путь к вашему K8s манифесту в Config Repo
+                    def YAML_PATH = 'deployment.yaml' // Путь к вашему K8s манифесту в Config Repo
                     def NEW_IMAGE = "${env.IMAGE_NAME}:${env.TAG}"
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
