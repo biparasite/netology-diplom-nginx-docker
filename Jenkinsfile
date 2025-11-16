@@ -42,12 +42,11 @@ pipeline {
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([usernamePassword(credentialsId: GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        
+                        sh 'rm -rf nginx'
                         sh "git clone ${CONFIG_REPO_URL} nginx"
                         
                         dir('nginx') {
                             // Настройка Git для выполнения коммита
-                            sh 'rm -rf nginx'
                             sh "git config user.email 'jenkins@ci.local'"
                             sh "git config user.name 'Jenkins GitOps Updater'"
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
