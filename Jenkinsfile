@@ -45,7 +45,7 @@ pipeline {
                         
                         sh "git clone ${CONFIG_REPO_URL} gitops-config"
                         
-                        dir('gitops-config') {
+                        dir('nginx') {
                             // Настройка Git для выполнения коммита
                             sh "git config user.email 'jenkins@ci.local'"
                             sh "git config user.name 'Jenkins GitOps Updater'"
