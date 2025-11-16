@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Определение IP‑адреса</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #4A148C; /* Фиолетовый цвет Yandex */
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .result {
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            max-width: 400px;
+        }
+        .ip {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Дипломный практикум в Yandex.Cloud</h1>
+    </div>
+
+    <h2>Ваш публичный IP‑адрес</h2>
+    <div class="result">
+        <p>Ваш IP: <span id="ip" class="ip">Загружается...</span></p>
+    </div>
+
+    <script>
+        // Функция, которая вызывается при получении данных от API
+        function showIP(response) {
+            document.getElementById('ip').textContent = response.ip;
+        }
+
+        // Создаём скрипт для запроса к API
+        const script = document.createElement('script');
+        script.src = 'https://api.ipify.org?format=jsonp&callback=showIP';
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>
