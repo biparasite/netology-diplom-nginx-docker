@@ -30,22 +30,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    // Подставляем тег образа в deployment.yaml
-                    sh """
-                    sed -i 's|https://hub.docker.com/biparasite/your-repo:latest|${DOCKER_IMAGE}:${TAG}|g' k8s/deployment.yaml
-                    """
-                    // Применяем манифесты
-                    sh "kubectl --kubeconfig ${KUBE_CONFIG} apply -f k8s/deployment.yaml"
-                    sh "kubectl --kubeconfig ${KUBE_CONFIG} apply -f k8s/service.yaml"
-                    // Ждём готовности подов
-                    sh "kubectl --kubeconfig ${KUBE_CONFIG} rollout status deployment/jenkins-app"
-                }
-            }
-        }
-    }
 
     post {
         success {
