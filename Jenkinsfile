@@ -38,7 +38,7 @@ pipeline {
                     def GIT_CREDENTIALS_ID = 'github-ssh-key-for-push' // ID учетных данных для пуша
                     def YAML_PATH = 'nginx/values.yaml' // Путь к вашему K8s манифесту в Config Repo
                     def NEW_IMAGE = "${env.TAG}"
-                    def PROJECT_PATH = "${WORKSPACE}"
+                    def PROJECT_PATH = "${WORKSPACE}/netology-diplom-k8s-config."
 
                     // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([sshUserPrivateKey(credentialsId: 'github-ssh-key-for-push', keyFileVariable: 'GIT_SSH_KEY_FILE', usernameVariable: 'GIT_USER')]) {
@@ -52,7 +52,7 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh "sed -i 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${PROJECT_PATH}/${YAML_PATH }"                          
+                            sh "sed -i '' 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${PROJECT_PATH}/${YAML_PATH }"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
