@@ -1,13 +1,8 @@
 pipeline {
+    agent any
     environment {
         IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
         TAG = "${env.GIT_COMMIT[0..7]}"
-    }
-    agent {
-        docker {
-            image 'docker:24-git'  // Образ с Docker CLI
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Монтируем сокет
-        }
     }
     stages {
         stage('Checkout') {
@@ -22,7 +17,7 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
                         def app = docker.build("${IMAGE_NAME}:${TAG}")
                         app.push()
                         // Дополнительно: тег latest
