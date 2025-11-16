@@ -6,7 +6,8 @@ pipeline {
         pollSCM('* * * * *') // Обязательно укажите 'pollSCM' 
     }
     environment {
-        IMAGE_NAME = 'biparasite/nginx_static'  // Укажите здесь!
+        IMAGE_USER = 'biparasite/'
+        IMAGE_NAME = 'nginx_static'  
         TAG = "${env.GIT_COMMIT[0..7]}"
     }
     stages {
@@ -23,7 +24,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
-                        def app = docker.build("${IMAGE_NAME}:${TAG}")
+                        def app = docker.build("${IMAGE_USER}${IMAGE_NAME}:${TAG}")
                         app.push()
                         // Дополнительно: тег latest
                         app.push('latest')
@@ -52,7 +53,7 @@ pipeline {
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
                             // 2. ОБНОВЛЕНИЕ YAML
-                            sh "sed -i 's|image: nginx_static:.*|nginx_static:${NEW_IMAGE}|g' ${YAML_PATH}"                               
+                            sh "sed -i 's|image: ${env.IMAGE_NAME}:.*|image: ${NEW_IMAGE}|g' ${YAML_PATH}"                          
                             // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
