@@ -13,6 +13,7 @@ COPY static/ /usr/share/nginx/html/
 
 # Открываем порт 443
 EXPOSE 443
+EXPOSE 80
 
 # Команда запуска (не обязательна, т. к. у базового образа уже есть ENTRYPOINT)
 CMD ["nginx", "-g", "daemon off;"]
