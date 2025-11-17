@@ -1,9 +1,8 @@
 pipeline {
     agent any
     triggers {
-        // Указывает Jenkins ожидать уведомления от репозитория
-        // Это более общий и предпочтительный способ для всех Git-серверов
-        pollSCM('* * * * *') // Обязательно укажите 'pollSCM' 
+
+        pollSCM('* * * * *')  
     }
     environment {
         IMAGE_USER = 'biparasite/'
@@ -34,30 +33,25 @@ pipeline {
             steps {
                 script {
                     // --- КОНФИГУРАЦИЯ ---
-                    def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' // Укажите URL вашего Config Repo
-                    def GIT_CREDENTIALS_ID = 'github-ssh-key-for-push' // ID учетных данных для пуша
-                    def YAML_PATH = 'nginx/values.yaml' // Путь к вашему K8s манифесту в Config Repo
+                    def CONFIG_REPO_URL = 'https://github.com/biparasite/netology-diplom-k8s-config.git' 
+                    def GIT_CREDENTIALS_ID = 'github-ssh-key-for-push' 
+                    def YAML_PATH = 'nginx/values.yaml'
                     def NEW_IMAGE = "${env.TAG}"
                     def PROJECT_PATH = "${WORKSPACE}/netology-diplom-k8s-config."
 
-                    // 1. Клонирование репозитория конфигурации с использованием учетных данных для пуша
                     withCredentials([sshUserPrivateKey(credentialsId: 'github-ssh-key-for-push', keyFileVariable: 'GIT_SSH_KEY_FILE', usernameVariable: 'GIT_USER')]) {
                         sh 'rm -rf netology-diplom-k8s-config'
                         sh "git clone ${CONFIG_REPO_URL}"
                         
                         dir('netology-diplom-k8s-config') {
-                            // Настройка Git для выполнения коммита
                             sh "git config user.email 'jenkins@ci.local'"
                             sh "git config user.name 'Jenkins GitOps Updater'"
                             sh "git checkout main" // или любая ветка, за которой следит Argo CD
                             
-                            // 2. ОБНОВЛЕНИЕ YAML
                             sh "sed -i '' 's/${env.IMAGE_NAME}:.*/${env.IMAGE_NAME}:${NEW_IMAGE}/g' ${PROJECT_PATH}/${YAML_PATH }"                          
-                            // 3. КОММИТ И PUSH
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
                             
-                            // Push с использованием учетных данных
                             sh "git push https://${GIT_USER}:${GIT_PASS}@github.com/biparasite/netology-diplom-k8s-config.git HEAD:main"
                         }
                     }
