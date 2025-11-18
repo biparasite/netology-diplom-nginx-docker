@@ -1,5 +1,5 @@
 # Используем официальный образ Nginx
-FROM nginx:alpine
+FROM --platform=linux/amd64 nginx:alpine
 
 # Удаляем дефолтовый конфиг
 RUN rm /etc/nginx/conf.d/default.conf
