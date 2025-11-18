@@ -37,7 +37,7 @@ pipeline {
                     def GIT_CREDENTIALS_ID = 'github-ssh-key-for-push' 
                     def YAML_PATH = 'nginx/values.yaml'
                     def NEW_IMAGE = "${env.TAG}"
-                    def PROJECT_PATH = "${WORKSPACE}/netology-diplom-k8s-config."
+                    def PROJECT_PATH = "${WORKSPACE}/netology-diplom-k8s-config"
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'github-ssh-key-for-push', keyFileVariable: 'GIT_SSH_KEY_FILE', usernameVariable: 'GIT_USER')]) {
                         sh 'rm -rf netology-diplom-k8s-config'
@@ -52,7 +52,7 @@ pipeline {
                             sh 'git add .'
                             sh "git commit -m 'GitOps: Auto-deploy ${NEW_IMAGE} triggered by Jenkins CI'"
                             
-                            sh "git push https://${GIT_USER}:${GIT_PASS}@github.com/biparasite/netology-diplom-k8s-config.git HEAD:main"
+                            sh "git push https://github.com/biparasite/netology-diplom-k8s-config.git HEAD:main"
                         }
                     }
                     echo "✅ GitOps Config обновлен до образа: ${NEW_IMAGE}"
@@ -69,3 +69,4 @@ pipeline {
         }
     }
 }
+
